@@ -1,0 +1,1860 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>MEP Coding System — Workbook Logic + Divisions 02 · 04 · 15 &amp; 16</title>
+<style>
+  :root{
+    --navy:#102a43; --ink:#1f2933; --muted:#52606d; --line:#d9e2ec; --soft:#f5f7fa;
+    --accent:#16697a; --gold:#b28a38;
+    --pass:#1e7e46; --pass-tint:#e6f4ea;
+    --revise:#b7791f; --revise-tint:#fdf3e0;
+    --hold:#c0392b; --hold-tint:#fdecea;
+    --plain-tint:#eef7f8; --contract-tint:#f8fafc; --gold-tint:#fbf3e3; --badge-tint:#f0f4f8;
+    --mat:#b28a38; --mat-tint:#fbf3e3;
+    --sub:#c0392b; --sub-tint:#fdecea;
+    --crew:#1e7e46; --crew-tint:#e6f4ea;
+    --eq:#6b46c1; --eq-tint:#f3f0fa;
+    --bg:#ffffff; --panel:#ffffff; --bg-soft:#f5f7fa;
+    --radius:10px; --radius-sm:8px;
+    --shadow:0 1px 2px rgba(16,42,67,.04);
+    --shadow2:0 4px 14px rgba(16,42,67,.08);
+  }
+  html.dark{
+    --navy:#e6edf3; --ink:#e6edf3; --muted:#8fa3b3; --line:#1e3a52; --soft:#0b1f33;
+    --accent:#4dc0d4; --gold:#d4b25c;
+    --pass:#4ade80; --pass-tint:#0d2e1e;
+    --revise:#fbbf24; --revise-tint:#2a2413;
+    --hold:#f87171; --hold-tint:#2a1414;
+    --plain-tint:#0d2c33; --contract-tint:#0f2338; --gold-tint:#2a2413; --badge-tint:#102a43;
+    --mat:#d4b25c; --mat-tint:#2a2413;
+    --sub:#f87171; --sub-tint:#2a1414;
+    --crew:#4ade80; --crew-tint:#0d2e1e;
+    --eq:#a78bfa; --eq-tint:#1e1838;
+    --bg:#0b1a2b; --panel:#102a43; --bg-soft:#0f2338;
+    --shadow:0 1px 2px rgba(0,0,0,.3);
+    --shadow2:0 4px 14px rgba(0,0,0,.5);
+  }
+  *{box-sizing:border-box; margin:0; padding:0;}
+  html{-webkit-text-size-adjust:100%; scroll-behavior:smooth;}
+  body{font-family:'Aptos','Segoe UI',system-ui,-apple-system,Arial,sans-serif; background:var(--bg); color:var(--ink); font-size:14px; line-height:1.5; transition:background .2s, color .2s; min-height:100vh; -webkit-font-smoothing:antialiased;}
+  a{color:var(--accent); text-decoration:none;}
+  button{font-family:inherit; cursor:pointer; border:none; background:none; color:inherit;}
+
+  /* HEADER */
+  .app-header{position:sticky; top:0; z-index:50; background:var(--panel); border-bottom:1px solid var(--line);}
+  .topbar{max-width:1320px; margin:0 auto; padding:12px 18px; display:flex; align-items:center; gap:12px; flex-wrap:wrap;}
+  .brand{display:flex; align-items:center; gap:10px; flex-shrink:0;}
+  .brand-mark{width:38px; height:38px; border-radius:9px; background:linear-gradient(135deg,#0b2239,#16697a); color:#fff; display:grid; place-items:center; font-weight:800; font-size:13px; box-shadow:0 3px 10px rgba(22,105,122,.28);}
+  .brand-title{font-size:14.5px; font-weight:700; line-height:1.1;}
+  .brand-sub{font-size:10.5px; color:var(--muted); margin-top:2px;}
+  .search{flex:1 1 200px; min-width:0; position:relative;}
+  .search input{width:100%; height:38px; padding:0 14px 0 38px; border:1px solid var(--line); border-radius:999px; background:var(--bg-soft); color:var(--ink); font-family:inherit; font-size:13px; outline:none; transition:.15s;}
+  .search input:focus{border-color:var(--accent); background:var(--panel); box-shadow:0 0 0 3px rgba(22,105,122,.12);}
+  .search-icon{position:absolute; left:13px; top:50%; transform:translateY(-50%); color:var(--muted); pointer-events:none;}
+  .icon-btn{width:38px; height:38px; border-radius:50%; border:1px solid var(--line); background:var(--panel); color:var(--ink); display:grid; place-items:center; transition:.15s; flex-shrink:0;}
+  .icon-btn:hover{border-color:var(--accent); color:var(--accent);}
+  .icon-sun{display:none;}
+  html.dark .icon-sun{display:block;}
+  html.dark .icon-moon{display:none;}
+
+  /* TABS */
+  .tabs{max-width:1320px; margin:0 auto; padding:0 18px 12px; display:flex; gap:8px; overflow-x:auto; scrollbar-width:none;}
+  .tabs::-webkit-scrollbar{display:none;}
+  .tab{display:inline-flex; align-items:center; gap:8px; padding:8px 16px; border-radius:999px; border:1px solid var(--line); background:var(--panel); color:var(--ink); font-size:12.5px; font-weight:600; white-space:nowrap; transition:.15s; flex-shrink:0;}
+  .tab:hover:not(.active){border-color:var(--accent); color:var(--accent);}
+  .tab.active{background:var(--navy); color:#fff; border-color:var(--navy);}
+  .tab-dot{width:6px; height:6px; border-radius:50%; background:var(--accent); opacity:.7;}
+  .tab.active .tab-dot{background:#8fe3af; opacity:1;}
+
+  /* MAIN */
+  main{max-width:1320px; margin:0 auto; padding:20px 18px 40px;}
+  .page{display:none;}
+  .page.active{display:block;}
+  .subpage{display:none;}
+  .subpage.active{display:block;}
+
+  /* DIVISION HEADER */
+  .div-header{background:linear-gradient(135deg, var(--contract-tint), var(--panel)); border:1px solid var(--line); border-radius:var(--radius); padding:20px 22px; margin-bottom:18px; box-shadow:var(--shadow); display:flex; justify-content:space-between; align-items:center; gap:16px; flex-wrap:wrap;}
+  .div-header .left{display:flex; align-items:center; gap:14px; min-width:0;}
+  .div-num{font-size:26px; font-weight:800; letter-spacing:-.04em; line-height:1; background:linear-gradient(135deg,#16697a,#0b2239); -webkit-background-clip:text; background-clip:text; -webkit-text-fill-color:transparent; min-width:52px;}
+  html.dark .div-num{background:linear-gradient(135deg,#4dc0d4,#8fe3af); -webkit-background-clip:text; background-clip:text;}
+  .div-title{font-size:17px; font-weight:700; line-height:1.15;}
+  .div-sub{font-size:12px; color:var(--muted); margin-top:3px;}
+  .stats{display:flex; gap:8px; flex-wrap:wrap;}
+  .stat{background:var(--panel); border:1px solid var(--line); border-radius:8px; padding:6px 12px; text-align:center; min-width:64px;}
+  .stat b{display:block; font-size:16px; font-weight:800; line-height:1.1;}
+  .stat span{font-size:9.5px; color:var(--muted); font-weight:700; text-transform:uppercase; letter-spacing:.06em; margin-top:2px; display:block;}
+  .stat.mat b{color:var(--mat);}
+  .stat.sub b{color:var(--sub);}
+  .stat.crew b{color:var(--crew);}
+  .stat.eq b{color:var(--eq);}
+
+  /* SUB TABS */
+  .subtabs{display:inline-flex; gap:4px; background:var(--bg-soft); padding:4px; border-radius:999px; border:1px solid var(--line); margin-bottom:18px; flex-wrap:wrap;}
+  .subtab{padding:6px 14px; border-radius:999px; font-size:12px; font-weight:600; color:var(--muted); transition:.15s;}
+  .subtab.active{background:var(--panel); color:var(--ink); box-shadow:var(--shadow);}
+  .subtab:hover:not(.active){color:var(--ink);}
+
+  /* ACTIVITY CARD */
+  .activity{background:var(--panel); border:1px solid var(--line); border-radius:var(--radius); margin-bottom:14px; box-shadow:var(--shadow); overflow:hidden; transition:box-shadow .2s;}
+  .activity:hover{box-shadow:var(--shadow2);}
+  .act-head{padding:14px 18px; border-bottom:1px solid var(--line); display:flex; align-items:center; gap:12px; flex-wrap:wrap; background:linear-gradient(90deg, rgba(22,105,122,.05), transparent 60%);}
+  .act-code{font-family:'SF Mono',Consolas,monospace; font-size:12px; font-weight:700; background:var(--navy); color:#fff; padding:4px 10px; border-radius:6px;}
+  html.dark .act-code{background:var(--accent); color:#0b1a2b;}
+  .act-name{font-size:14.5px; font-weight:700; line-height:1.25; min-width:0;}
+  .act-tags{margin-left:auto; display:flex; gap:5px; flex-wrap:wrap;}
+  .tag{font-size:10px; font-weight:700; letter-spacing:.04em; text-transform:uppercase; padding:3px 8px; border-radius:4px;}
+  .tag.mat{background:var(--mat-tint); color:var(--mat);}
+  .tag.sub{background:var(--sub-tint); color:var(--sub);}
+  .tag.crew{background:var(--crew-tint); color:var(--crew);}
+  .tag.eq{background:var(--eq-tint); color:var(--eq);}
+  .tag.none{background:var(--badge-tint); color:var(--muted);}
+  .tag.gold{background:var(--gold-tint); color:var(--gold);}
+  .act-body{padding:16px 18px 18px; display:grid; gap:12px; grid-template-columns:repeat(auto-fit, minmax(240px, 1fr));}
+  .act-body-single{padding:16px 18px 18px; display:flex; flex-direction:column; gap:12px;}
+
+  /* RESOURCE GROUP */
+  .res-group{background:var(--bg-soft); border:1px solid var(--line); border-radius:var(--radius-sm); padding:12px 13px;}
+  .res-group h4{display:flex; align-items:center; gap:7px; font-size:10.5px; font-weight:800; letter-spacing:.08em; text-transform:uppercase; color:var(--muted); margin-bottom:10px;}
+  .res-group h4::before{content:""; width:7px; height:7px; border-radius:50%; background:var(--muted);}
+  .res-group.g-mat h4::before{background:var(--mat);}
+  .res-group.g-sub h4::before{background:var(--sub);}
+  .res-group.g-crew h4::before{background:var(--crew);}
+  .res-group.g-eq h4::before{background:var(--eq);}
+  .res-group h4 .count{margin-left:auto; background:var(--panel); color:var(--muted); padding:1px 7px; border-radius:10px; font-size:10px; border:1px solid var(--line); font-weight:700;}
+
+  /* RESOURCE ITEM */
+  .res-item{background:var(--panel); border:1px solid var(--line); border-radius:7px; padding:9px 11px; margin-bottom:6px; border-left:3px solid var(--line); transition:.15s;}
+  .res-item:last-child{margin-bottom:0;}
+  .res-item.m{border-left-color:var(--mat);}
+  .res-item.s{border-left-color:var(--sub);}
+  .res-item.c{border-left-color:var(--crew);}
+  .res-item.e{border-left-color:var(--eq);}
+  .res-item.mod{background:var(--revise-tint); border-color:var(--revise); border-left-color:var(--revise);}
+  .res-code{font-family:'SF Mono',Consolas,monospace; font-size:11px; font-weight:700; color:var(--accent);}
+  .res-item.mod .res-code{color:var(--revise); text-decoration:line-through; text-decoration-thickness:1px;}
+  .res-name{font-size:12.5px; font-weight:600; margin-top:3px; line-height:1.35;}
+  .res-meta{font-family:'SF Mono',Consolas,monospace; font-size:10.5px; color:var(--muted); margin-top:3px;}
+  .res-empty{font-size:12px; color:var(--muted); font-style:italic; padding:4px 2px;}
+
+  /* MOD NOTE */
+  .mod-note{display:inline-flex; align-items:center; gap:5px; background:var(--gold-tint); color:var(--gold); font-size:10px; font-weight:800; letter-spacing:.04em; text-transform:uppercase; padding:3px 8px; border-radius:4px; margin-top:7px; border:1px solid rgba(178,138,56,.25);}
+  .mod-note b{font-family:'SF Mono',Consolas,monospace; font-weight:800; text-transform:none; letter-spacing:0;}
+
+  /* CREW COMPOSITION */
+  .crew-comp{margin-top:8px; padding:8px 10px; background:var(--bg-soft); border:1px dashed var(--line); border-radius:6px;}
+  .crew-comp-title{font-size:9.5px; font-weight:800; color:var(--muted); text-transform:uppercase; letter-spacing:.08em; margin-bottom:6px;}
+  .crew-comp ul{list-style:none; display:grid; gap:3px 10px; grid-template-columns:1fr;}
+  .crew-comp li{font-family:'SF Mono',Consolas,monospace; font-size:11px; display:flex; justify-content:space-between; gap:8px;}
+  .crew-comp li span:first-child{color:var(--muted); overflow:hidden; text-overflow:ellipsis; white-space:nowrap;}
+  .crew-comp li span:last-child{font-weight:700; color:var(--crew); flex-shrink:0;}
+  @media(min-width:480px){ .crew-comp ul{grid-template-columns:1fr 1fr;} }
+
+  /* VARIANTS */
+  .variants{margin-top:6px; padding-left:10px; border-left:2px solid var(--line); font-family:'SF Mono',Consolas,monospace; font-size:10.5px; color:var(--muted);}
+  .variants div{padding:2px 0;}
+
+  /* PRINCIPLE BLOCK (used in Lists tab) */
+  .principle-block{background:var(--bg-soft); border:1px solid var(--line); border-radius:var(--radius-sm); padding:12px 14px;}
+  .principle-block h5{font-size:10.5px; font-weight:800; letter-spacing:.08em; text-transform:uppercase; color:var(--accent); margin-bottom:8px;}
+  .principle-block p{font-size:13px; line-height:1.65; color:var(--ink);}
+  .principle-block p + p{margin-top:6px;}
+  .principle-block ul{list-style:none; font-size:12.5px; line-height:1.7;}
+  .principle-block li{padding:3px 0; padding-left:16px; position:relative;}
+  .principle-block li::before{content:"▸"; position:absolute; left:0; color:var(--accent);}
+  .principle-block pre{font-family:'SF Mono',Consolas,monospace; font-size:11.5px; line-height:1.6; color:var(--ink); background:var(--panel); padding:10px 12px; border-radius:6px; border:1px solid var(--line); overflow-x:auto; white-space:pre; margin-top:6px;}
+
+  /* QUESTION FLOW (Overview) */
+  .q-flow{display:flex; flex-direction:column; gap:8px;}
+  .q-step{display:flex; align-items:center; gap:14px; background:var(--panel); border:1px solid var(--line); border-radius:var(--radius-sm); padding:12px 16px;}
+  .q-num{width:32px; height:32px; border-radius:50%; background:var(--navy); color:#fff; display:grid; place-items:center; font-weight:800; font-size:13px; flex-shrink:0;}
+  html.dark .q-num{background:var(--accent); color:#0b1a2b;}
+  .q-body{flex:1; min-width:0;}
+  .q-title{font-size:13px; font-weight:700; margin-bottom:3px;}
+  .q-target{font-size:11.5px; color:var(--muted); line-height:1.5;}
+  .q-arrow{text-align:center; color:var(--muted); font-size:13px; margin:-4px 0; padding-left:15px;}
+
+  /* RESULT CALLOUT */
+  .result-callout{background:linear-gradient(135deg, var(--pass-tint), var(--panel)); border:1px solid var(--pass); border-radius:var(--radius); padding:16px 18px;}
+  .result-callout h5{font-size:11px; font-weight:800; letter-spacing:.08em; text-transform:uppercase; color:var(--pass); margin-bottom:10px;}
+  .result-callout .formula-line{font-family:'SF Mono',Consolas,monospace; font-size:12.5px; line-height:1.9; color:var(--ink);}
+
+  /* WARN CALLOUT */
+  .warn-callout{background:linear-gradient(135deg, var(--gold-tint), var(--panel)); border:1px solid var(--gold); border-radius:var(--radius); padding:16px 18px;}
+  .warn-callout h5{font-size:11px; font-weight:800; letter-spacing:.08em; text-transform:uppercase; color:var(--gold); margin-bottom:10px;}
+  .warn-callout p{font-size:13px; line-height:1.65; color:var(--ink);}
+  .warn-callout p + p{margin-top:6px;}
+
+  /* TABLE */
+  .matrix{width:100%; border-collapse:collapse; font-size:12.5px;}
+  .matrix th, .matrix td{text-align:left; padding:9px 12px; border-bottom:1px solid var(--line); vertical-align:top;}
+  .matrix th{font-size:10.5px; font-weight:800; letter-spacing:.06em; text-transform:uppercase; color:var(--muted); background:var(--bg-soft);}
+  .matrix tr:last-child td{border-bottom:none;}
+  .matrix td:first-child{font-weight:700; color:var(--ink); white-space:nowrap;}
+  .matrix-wrap{background:var(--panel); border:1px solid var(--line); border-radius:var(--radius); padding:4px; overflow-x:auto;}
+
+  /* EMPTY */
+  .empty{display:none; text-align:center; padding:48px 20px; color:var(--muted); font-size:13px; background:var(--panel); border:1px dashed var(--line); border-radius:var(--radius); margin-bottom:14px;}
+  .empty.show{display:block;}
+  .empty .big{font-size:32px; margin-bottom:8px; opacity:.4;}
+
+  /* FOOTER */
+  .app-footer{max-width:1320px; margin:0 auto; padding:22px 18px 36px; border-top:1px solid var(--line); display:flex; justify-content:space-between; gap:12px; flex-wrap:wrap; font-size:11px; color:var(--muted);}
+  .app-footer .formula{display:inline-flex; align-items:center; gap:6px; background:var(--bg-soft); border:1px solid var(--line); padding:4px 10px; border-radius:999px; font-family:'SF Mono',Consolas,monospace; font-size:10.5px; color:var(--ink);}
+
+  /* MOBILE */
+  @media(max-width:640px){
+    .topbar{padding:10px 14px; gap:10px;}
+    .brand-mark{width:34px; height:34px; font-size:12px;}
+    .brand-title{font-size:13px;}
+    .brand-sub{font-size:10px;}
+    .tabs{padding:0 14px 10px;}
+    .tab{padding:7px 13px; font-size:12px;}
+    main{padding:16px 14px 32px;}
+    .div-header{padding:16px 16px;}
+    .div-num{font-size:22px; min-width:44px;}
+    .div-title{font-size:15.5px;}
+    .act-head{padding:12px 14px; gap:10px;}
+    .act-name{font-size:13.5px; width:100%;}
+    .act-tags{margin-left:0; width:100%;}
+    .act-body{padding:14px; gap:10px; grid-template-columns:1fr;}
+    .act-body-single{padding:14px;}
+    .app-footer{padding:18px 14px 30px; flex-direction:column; align-items:flex-start;}
+    .q-step{padding:10px 12px; gap:10px;}
+    .q-num{width:28px; height:28px; font-size:12px;}
+    .q-title{font-size:12.5px;}
+    .q-target{font-size:11px;}
+  }
+
+  @media print{
+    .app-header, .subtabs, .icon-btn, .search{display:none !important;}
+    .page, .subpage{display:block !important;}
+    .activity{break-inside:avoid; box-shadow:none; border:1px solid #ccc;}
+    body{background:#fff; color:#000;}
+  }
+</style>
+</head>
+<body>
+
+<header class="app-header">
+  <div class="topbar">
+    <div class="brand">
+      <div class="brand-mark">MEP</div>
+      <div>
+        <div class="brand-title">MEP Coding System</div>
+        <div class="brand-sub">Workbook Logic · Divisions 02 · 04 · 15 &amp; 16</div>
+      </div>
+    </div>
+    <div class="search">
+      <svg class="search-icon" viewBox="0 0 24 24" width="15" height="15" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="11" cy="11" r="7"/><line x1="21" y1="21" x2="16.65" y2="16.65"/></svg>
+      <input id="search" type="search" placeholder="Search activities, resources, codes…" autocomplete="off">
+    </div>
+    <button class="icon-btn" id="themeToggle" aria-label="Toggle theme">
+      <svg class="icon-moon" viewBox="0 0 24 24" width="15" height="15" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"/></svg>
+      <svg class="icon-sun" viewBox="0 0 24 24" width="15" height="15" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="4"/><path d="M12 2v2M12 20v2M4.93 4.93l1.41 1.41M17.66 17.66l1.41 1.41M2 12h2M20 12h2M6.34 17.66l-1.41 1.41M19.07 4.93l-1.41 1.41"/></svg>
+    </button>
+  </div>
+  <nav class="tabs" id="mainTabs">
+    <button class="tab active" data-tab="logic"><span class="tab-dot"></span>Workbook Logic</button>
+    <button class="tab" data-tab="div02"><span class="tab-dot"></span>02 · Earthwork</button>
+    <button class="tab" data-tab="div04"><span class="tab-dot"></span>04 · Blockwork</button>
+    <button class="tab" data-tab="div15"><span class="tab-dot"></span>15 · 16 MEP</button>
+  </nav>
+</header>
+
+<main>
+
+<!-- ═══════════════════════════════════════════════════════════════ -->
+<!-- WORKBOOK LOGIC                                                  -->
+<!-- ═══════════════════════════════════════════════════════════════ -->
+<section id="logic" class="page active">
+  <div class="div-header">
+    <div class="left">
+      <div class="div-num" style="font-size:32px;">📘</div>
+      <div>
+        <div class="div-title">The Workbook — Whole Idea</div>
+        <div class="div-sub">6 questions · 13 list types · Productivity layer · Architecture</div>
+      </div>
+    </div>
+    <div class="stats">
+      <div class="stat crew"><b>143</b><span>Activities</span></div>
+      <div class="stat mat"><b>70</b><span>Materials</span></div>
+      <div class="stat sub"><b>59</b><span>Subs</span></div>
+      <div class="stat crew"><b>19</b><span>Crews</span></div>
+      <div class="stat eq"><b>36</b><span>Equip</span></div>
+    </div>
+  </div>
+
+  <div class="subtabs">
+    <button class="subtab active" data-subtab="overview">Overview</button>
+    <button class="subtab" data-subtab="lists">13 Lists</button>
+    <button class="subtab" data-subtab="productivity">Productivity</button>
+    <button class="subtab" data-subtab="architecture">Architecture</button>
+    <button class="subtab" data-subtab="example">Worked Example</button>
+  </div>
+
+  <!-- ─── OVERVIEW ─── -->
+  <div id="sub-overview" class="subpage active">
+    <article class="activity">
+      <div class="act-head">
+        <span class="act-code">01</span>
+        <span class="act-name">The whole idea — six questions</span>
+        <div class="act-tags"><span class="tag crew">Foundation</span></div>
+      </div>
+      <div class="act-body-single">
+        <div class="q-flow">
+          <div class="q-step">
+            <div class="q-num">1</div>
+            <div class="q-body">
+              <div class="q-title">WHAT WORK EXISTS?</div>
+              <div class="q-target">→ Activity List CSI</div>
+            </div>
+          </div>
+          <div class="q-arrow">↓</div>
+          <div class="q-step">
+            <div class="q-num">2</div>
+            <div class="q-body">
+              <div class="q-title">WHAT RESOURCES DOES EACH ACTIVITY NEED?</div>
+              <div class="q-target">→ Mat. List CSI · MP. List CSI · SUBC. List CSI · Equip. List CSI</div>
+            </div>
+          </div>
+          <div class="q-arrow">↓</div>
+          <div class="q-step">
+            <div class="q-num">3</div>
+            <div class="q-body">
+              <div class="q-title">WHAT IS THE UNIQUE IDENTITY OF EACH RESOURCE?</div>
+              <div class="q-target">→ Material Unique · ManPower Unique · Sub Unique · Unique Machinery → Resource Unique List</div>
+            </div>
+          </div>
+          <div class="q-arrow">↓</div>
+          <div class="q-step">
+            <div class="q-num">4</div>
+            <div class="q-body">
+              <div class="q-title">WHAT DOES EACH CREW / MACHINE REALLY CONTAIN OR COST?</div>
+              <div class="q-target">→ Manual Manpower Database · Manpower List · Machine List</div>
+            </div>
+          </div>
+          <div class="q-arrow">↓</div>
+          <div class="q-step">
+            <div class="q-num">5</div>
+            <div class="q-body">
+              <div class="q-title">HOW MUCH RESOURCE IS REQUIRED PER UNIT OF WORK?</div>
+              <div class="q-target">→ Manpower PR · Machinary PR · Machinary PR2</div>
+            </div>
+          </div>
+          <div class="q-arrow">↓</div>
+          <div class="q-step">
+            <div class="q-num">6</div>
+            <div class="q-body">
+              <div class="q-title">FINAL RESULT</div>
+              <div class="q-target">→ Corporate execution / pricing / planning standard</div>
+            </div>
+          </div>
+        </div>
+
+        <div class="result-callout">
+          <h5>Final Result — What the workbook produces</h5>
+          <div class="formula-line">
+            Activity<br>
+            + Material<br>
+            + Crew<br>
+            + Subcontractor<br>
+            + Equipment<br>
+            + Productivity<br>
+            + Rates<br>
+            = <b>Corporate execution / pricing / planning standard</b>
+          </div>
+        </div>
+
+        <div class="principle-block">
+          <h5>Why the workbook is valuable</h5>
+          <p>The biggest benefit is not the codes themselves — the codes make <i>this</i> possible:</p>
+          <pre>CORPORATE KNOWLEDGE
+      ↓
+ACTIVITY → RESOURCES → PRODUCTIVITY → UNIT COST → TENDER → BOQ
+      ↓
+PLANNING → PROCUREMENT → EXECUTION → COST CONTROL
+      ↓
+ACTUAL PERFORMANCE → NEW CORPORATE BENCHMARK</pre>
+        </div>
+      </div>
+    </article>
+
+    <article class="activity">
+      <div class="act-head">
+        <span class="act-code">25</span>
+        <span class="act-name">The most important architecture principle</span>
+        <div class="act-tags"><span class="tag gold">Principle</span></div>
+      </div>
+      <div class="act-body-single">
+        <div class="warn-callout">
+          <h5>Do not merge everything into one giant code</h5>
+          <p>Keep the identities separate:</p>
+          <div class="formula-line" style="margin-top:10px;">
+            <b>WBS</b> = WHERE<br>
+            <b>Activity Code</b> = WHAT WORK<br>
+            <b>Resource Unique Code</b> = WITH WHAT<br>
+            <b>Productivity</b> = HOW FAST / HOW MUCH RESOURCE<br>
+            <b>BOQ Quantity</b> = HOW MUCH WORK<br>
+            <b>Rate</b> = HOW MUCH IT COSTS<br>
+            <b>Schedule</b> = WHEN<br>
+            <b>Actual</b> = WHAT REALLY HAPPENED
+          </div>
+          <p style="margin-top:10px;"><b>Then link them.</b> That gives SAMCO a construction data model — not merely a coding workbook.</p>
+        </div>
+      </div>
+    </article>
+  </div>
+
+  <!-- ─── 13 LISTS ─── -->
+  <div id="sub-lists" class="subpage">
+
+    <!-- Activity List CSI -->
+    <article class="activity">
+      <div class="act-head">
+        <span class="act-code">02</span>
+        <span class="act-name">Activity List CSI — the master list of work</span>
+        <div class="act-tags"><span class="tag crew">WHAT WE DO</span></div>
+      </div>
+      <div class="act-body-single">
+        <div class="principle-block">
+          <h5>Why it exists</h5>
+          <p>Defines: what activities does SAMCO know how to execute? Contains <b>143 actual activities</b>.</p>
+        </div>
+        <div class="principle-block">
+          <h5>How it is created</h5>
+          <pre>CSI Division + CSI Sub Division + SAMCO Activity Extension = Activity Code
+
+02 → 02300 = Earthwork → 09 = specific activity → 02300-09</pre>
+        </div>
+        <div class="principle-block">
+          <h5>Example</h5>
+          <pre>02300-09
+Backfilling Work For Open Area
+with Imported Material Including Compaction</pre>
+        </div>
+        <div class="principle-block">
+          <h5>What connects to it</h5>
+          <ul>
+            <li>Mat. List CSI</li>
+            <li>MP. List CSI</li>
+            <li>SUBC. List CSI</li>
+            <li>Equip. List CSI</li>
+          </ul>
+        </div>
+        <div class="principle-block">
+          <h5>Benefit</h5>
+          <p>One activity has one controlled identity. People stop writing “Backfill / Backfilling / Imported backfill / Fill material / Backfilling works” as five unrelated activities.</p>
+        </div>
+      </div>
+    </article>
+
+    <!-- Mat. List CSI -->
+    <article class="activity">
+      <div class="act-head">
+        <span class="act-code">03</span>
+        <span class="act-name">Mat. List CSI — Activity ↔ Material relationship</span>
+        <div class="act-tags"><span class="tag mat">Materials</span></div>
+      </div>
+      <div class="act-body-single">
+        <div class="principle-block">
+          <h5>Why it exists</h5>
+          <p>NOT the material master. It answers: <b>What material does this activity require?</b></p>
+        </div>
+        <div class="principle-block">
+          <h5>How it is created</h5>
+          <pre>Activity 02300-09 + Resource Order 105
+                        where 1 = Material, 05 = sequence
+Generated code = 02300 + 105 = 02300105</pre>
+        </div>
+        <div class="principle-block">
+          <h5>Key field: Resource Main Code Mod.</h5>
+          <p>If the material already exists elsewhere, this field replaces the generated code with the canonical ID.</p>
+          <pre>Generated 15200125 for Ready Mix-Plain Concrete
+BUT it already exists as 03300125
+→ Resource Main Code Mod. = 03300125</pre>
+        </div>
+        <div class="principle-block">
+          <h5>Benefit</h5>
+          <p>Prevents material duplication. One material has one identity across all activities.</p>
+        </div>
+      </div>
+    </article>
+
+    <!-- Material Unique List -->
+    <article class="activity">
+      <div class="act-head">
+        <span class="act-code">04</span>
+        <span class="act-name">Material Unique List — define each material once</span>
+        <div class="act-tags"><span class="tag mat">70 Materials</span></div>
+      </div>
+      <div class="act-body-single">
+        <div class="principle-block">
+          <h5>Why it exists</h5>
+          <p>Mat. List CSI may contain the same material 20/30/50 times. The Unique List defines it <b>once</b>, regardless of how many activities use it.</p>
+        </div>
+        <div class="principle-block">
+          <h5>Example</h5>
+          <pre>Material     : Backfilling Material
+Main Code    : 02300105
+UOM          : M3
+Category     : M</pre>
+        </div>
+        <div class="principle-block">
+          <h5>Creation</h5>
+          <pre>Mat. List CSI (many rows)
+        ↓  remove repeated identities
+Material Unique List (one record)</pre>
+        </div>
+        <div class="principle-block">
+          <h5>Benefit</h5>
+          <p>One description · unit · identity · specification · price history · supplier history for the material.</p>
+        </div>
+      </div>
+    </article>
+
+    <!-- Manual Manpower Database -->
+    <article class="activity">
+      <div class="act-head">
+        <span class="act-code">05</span>
+        <span class="act-name">Manual Manpower Database — raw worker cost</span>
+        <div class="act-tags"><span class="tag crew">156 positions</span></div>
+      </div>
+      <div class="act-body-single">
+        <div class="principle-block">
+          <h5>Why it exists</h5>
+          <p>A crew cost cannot be calculated until individual workers have a cost.</p>
+        </div>
+        <div class="principle-block">
+          <h5>Creation</h5>
+          <pre>Basic Salary + Transportation + Housing + Food
++ Vacation + Bonus + EOS + GOSI + Air Tickets
++ Medical + Permits + Recruitment + Other allowances
+= Total manpower cost</pre>
+        </div>
+        <div class="principle-block">
+          <h5>Example</h5>
+          <pre>Surveyor → Monthly cost → Daily cost → Hourly cost</pre>
+        </div>
+        <div class="principle-block">
+          <h5>Benefit</h5>
+          <p>Tender and planning do not need to guess “what does one surveyor cost SAMCO?” — there is one controlled basis.</p>
+        </div>
+      </div>
+    </article>
+
+    <!-- Manpower List -->
+    <article class="activity">
+      <div class="act-head">
+        <span class="act-code">06</span>
+        <span class="act-name">Manpower List — coded worker identity</span>
+        <div class="act-tags"><span class="tag crew">Coding</span></div>
+      </div>
+      <div class="act-body-single">
+        <div class="principle-block">
+          <h5>Why it exists</h5>
+          <p>Manual Manpower Database knows “Surveyor” — but not the construction coding identity. Manpower List creates that identity.</p>
+        </div>
+        <div class="principle-block">
+          <h5>Logic</h5>
+          <pre>CSI / Sub Division + Manpower Resource Order = Manpower Main Code
+
+01700 + 039 = 01700039 = Labour</pre>
+        </div>
+        <div class="principle-block">
+          <h5>Output</h5>
+          <pre>Manpower Code = 01700039
+Description   = Labour
+Monthly Cost  = X
+Daily Cost    = X / working days
+Hourly Cost   = daily / hours</pre>
+        </div>
+        <div class="principle-block">
+          <h5>Benefit</h5>
+          <p>Provides one coded worker identity that can be reused inside many different crews.</p>
+        </div>
+      </div>
+    </article>
+
+    <!-- MP. List CSI -->
+    <article class="activity">
+      <div class="act-head">
+        <span class="act-code">07</span>
+        <span class="act-name">MP. List CSI — Activity ↔ Crew relationship</span>
+        <div class="act-tags"><span class="tag crew">Crew link</span></div>
+      </div>
+      <div class="act-body-single">
+        <div class="principle-block">
+          <h5>Why it exists</h5>
+          <p>Answers: <b>Which crew executes this activity?</b></p>
+        </div>
+        <div class="principle-block">
+          <h5>Example</h5>
+          <pre>02300-09 Backfilling
+   uses
+Surveying Crew
+General Workers Crew</pre>
+        </div>
+        <div class="principle-block">
+          <h5>Code Mod example</h5>
+          <pre>Generated under activity: 02300305
+Canonical identity     : 02700305
+Resource Main Code Mod.: 02300305 → 02700305</pre>
+        </div>
+        <div class="principle-block">
+          <h5>Benefit</h5>
+          <p>One Surveying Crew can execute excavation, roads, backfilling, concrete, external works — without creating five different Surveying Crews.</p>
+        </div>
+      </div>
+    </article>
+
+    <!-- ManPower Unique List -->
+    <article class="activity">
+      <div class="act-head">
+        <span class="act-code">08</span>
+        <span class="act-name">ManPower Unique List — crew composition + crew cost</span>
+        <div class="act-tags"><span class="tag crew">2 jobs</span></div>
+      </div>
+      <div class="act-body-single">
+        <div class="principle-block">
+          <h5>Job A — Crew composition</h5>
+          <pre>General Workers Crew  02300320
+   Leadman Labour   × 1
+   Helper           × 3
+   Labour           × 9</pre>
+          <p style="margin-top:8px;">Each worker links back to the Manpower List — hence monthly / daily / hourly rate.</p>
+        </div>
+        <div class="principle-block">
+          <h5>Job B — Crew cost</h5>
+          <pre>Crew = Σ (worker qty × worker rate)
+→ Crew Rate / Month · Day · Hour</pre>
+        </div>
+        <div class="principle-block">
+          <h5>Actual workbook examples</h5>
+          <pre>02300320 General Workers Crew  ≈ 8.37 EGP / crew MH
+02700305 Surveying Crew        ≈ 21.15 EGP / crew MH</pre>
+        </div>
+        <div class="principle-block">
+          <h5>Benefit</h5>
+          <p>You no longer price “6 labour + 1 foreman + 3 helpers” independently every time. You say <b>USE General Workers Crew 02300320</b> — composition and cost are already known.</p>
+        </div>
+      </div>
+    </article>
+
+    <!-- SUBC. List CSI -->
+    <article class="activity">
+      <div class="act-head">
+        <span class="act-code">09</span>
+        <span class="act-name">SUBC. List CSI — Activity ↔ Subcontractor relationship</span>
+        <div class="act-tags"><span class="tag sub">Sub link</span></div>
+      </div>
+      <div class="act-body-single">
+        <div class="principle-block">
+          <h5>Example</h5>
+          <pre>02300-09 Backfilling
+   uses
+02300210 Backfilling Sub-Contractor
+        where 2 = Subcontractor, 10 = sequence</pre>
+        </div>
+        <div class="principle-block">
+          <h5>Benefit</h5>
+          <p>Identify which activities should be self-performed, may be subcontracted, or depend on specialist subcontractors — without creating the subcontractor category repeatedly.</p>
+        </div>
+      </div>
+    </article>
+
+    <!-- Sub-Contractors Unique List -->
+    <article class="activity">
+      <div class="act-head">
+        <span class="act-code">10</span>
+        <span class="act-name">Sub-Contractors Unique List</span>
+        <div class="act-tags"><span class="tag sub">59 Subs</span></div>
+      </div>
+      <div class="act-body-single">
+        <div class="principle-block">
+          <h5>Why it exists</h5>
+          <p>Removes repeated subcontractor categories from the relationship list.</p>
+        </div>
+        <div class="principle-block">
+          <h5>Example</h5>
+          <pre>02300210
+Backfilling Sub-Contractor
+
+One record — instead of repeating it for Activity A, B, C</pre>
+        </div>
+        <div class="principle-block">
+          <h5>Benefit</h5>
+          <p>Later attach approved vendors, quotations, rates, performance, contracts, and historical cost to one category.</p>
+        </div>
+      </div>
+    </article>
+
+    <!-- Equip. List CSI -->
+    <article class="activity">
+      <div class="act-head">
+        <span class="act-code">11</span>
+        <span class="act-name">Equip. List CSI — Activity ↔ Equipment relationship</span>
+        <div class="act-tags"><span class="tag eq">Equipment</span></div>
+      </div>
+      <div class="act-body-single">
+        <div class="principle-block">
+          <h5>Example — 02300-09 Backfilling requires</h5>
+          <pre>Loader · Dumptruck · Water Tanker · Roller Compactor · Grader</pre>
+        </div>
+        <div class="principle-block">
+          <h5>Resource coding</h5>
+          <pre>415 → 4 = Equipment, 15 = sequence
+02300 + 415 = 02300415 = Loader</pre>
+        </div>
+        <div class="principle-block">
+          <h5>Reuse example</h5>
+          <pre>Generated : 02300435
+Existing  : 02700435
+→ 02300435 → 02700435</pre>
+        </div>
+        <div class="principle-block">
+          <h5>Benefit — very important principle</h5>
+          <p>The activity doesn't <i>own</i> the machine. It merely says: <b>I USE this machine</b>.</p>
+        </div>
+      </div>
+    </article>
+
+    <!-- List of Unique Machinary -->
+    <article class="activity">
+      <div class="act-head">
+        <span class="act-code">12</span>
+        <span class="act-name">List of Unique Machinery — engineering-based costing</span>
+        <div class="act-tags"><span class="tag eq">66 records · 24 types</span></div>
+      </div>
+      <div class="act-body-single">
+        <div class="principle-block">
+          <h5>How it differs from Equip. List CSI</h5>
+          <p>Equip. List CSI says “Loader”. This list says: <b>Which Loader? What model? How much did it cost? How long will it last? What does it consume? What operator does it need? What does it cost per hour?</b></p>
+        </div>
+        <div class="principle-block">
+          <h5>Variants</h5>
+          <pre>Loader — Main Code 02300415
+   Variant 001 = specific machine/model
+   Variant 002 = specific machine/model
+   Variant 003 = …</pre>
+        </div>
+        <div class="principle-block">
+          <h5>Calculations</h5>
+          <pre>Purchase Cost − Salvage Value = Depreciation
++ Operator Cost + Fuel + Oil & Lubricants
++ Maintenance + Tyres
+= Equipment Hourly Cost</pre>
+        </div>
+        <div class="principle-block">
+          <h5>Benefit</h5>
+          <p>Equipment pricing is engineering-based — not “500 EGP/hour because somebody remembers that number”.</p>
+        </div>
+      </div>
+    </article>
+
+    <!-- Machine List -->
+    <article class="activity">
+      <div class="act-head">
+        <span class="act-code">13</span>
+        <span class="act-name">Machine List — practical equipment variants</span>
+        <div class="act-tags"><span class="tag eq">Variants</span></div>
+      </div>
+      <div class="act-body-single">
+        <div class="principle-block">
+          <h5>Example</h5>
+          <pre>02300415-001  Loader  Big     UOM = EH
+02300415-002  Loader  Small   UOM = EH</pre>
+        </div>
+        <div class="principle-block">
+          <h5>Why the extension exists</h5>
+          <p>Main identity <b>02300415 = Loader</b> · Variant <b>-001 = Big</b> · <b>-002 = Small</b>. So <b>02300415-001</b> is a specific usable resource variant.</p>
+        </div>
+        <div class="principle-block">
+          <h5>Benefit</h5>
+          <p>Planning / tender doesn't need to know every serial/model of every loader. They choose <b>Loader – Big</b> or <b>Loader – Small</b> — while detailed engineering data remains underneath.</p>
+        </div>
+      </div>
+    </article>
+
+    <!-- Resource Unique List -->
+    <article class="activity">
+      <div class="act-head">
+        <span class="act-code">14</span>
+        <span class="act-name">Resource Unique List — the final consolidated master</span>
+        <div class="act-tags"><span class="tag gold">184 records</span></div>
+      </div>
+      <div class="act-body-single">
+        <div class="matrix-wrap">
+          <table class="matrix">
+            <thead><tr><th>Category</th><th>Actual Records</th></tr></thead>
+            <tbody>
+              <tr><td>Materials</td><td>70</td></tr>
+              <tr><td>Subcontractors</td><td>59</td></tr>
+              <tr><td>Crews</td><td>19</td></tr>
+              <tr><td>Equipment variants</td><td>36</td></tr>
+              <tr><td><b>Total</b></td><td><b>184</b></td></tr>
+            </tbody>
+          </table>
+        </div>
+        <div class="principle-block">
+          <h5>Conceptually</h5>
+          <pre>Material Unique List ──────┐
+Subcontractor Unique List ─┤
+ManPower Unique List ──────┼──► RESOURCE UNIQUE LIST
+Machine List ──────────────┘</pre>
+        </div>
+        <div class="principle-block">
+          <h5>Example rows</h5>
+          <pre>02300105-001   Cat 1  Backfilling Material          M3
+02300210-001   Cat 2  Backfilling Sub-Contractor    LS
+02300320-001   Cat 3  General Workers Crew           MH  ≈ 8.37
+02300415-001   Cat 4  Loader – Big                   EH  ≈ 39.70</pre>
+        </div>
+        <div class="principle-block">
+          <h5>Distinction</h5>
+          <p>The specialized Unique Lists explain the resource family. <b>Resource Unique List</b> gives the company one consolidated catalogue.</p>
+        </div>
+      </div>
+    </article>
+  </div>
+
+  <!-- ─── PRODUCTIVITY ─── -->
+  <div id="sub-productivity" class="subpage">
+
+    <article class="activity">
+      <div class="act-head">
+        <span class="act-code">15</span>
+        <span class="act-name">Manpower PR — Production Rate / Productivity</span>
+        <div class="act-tags"><span class="tag crew">MH / Unit</span></div>
+      </div>
+      <div class="act-body-single">
+        <div class="principle-block">
+          <h5>Question it answers</h5>
+          <p><b>How much manpower is needed to produce one unit of an activity?</b></p>
+        </div>
+        <div class="principle-block">
+          <h5>Worked example — Activity 02300-09 Backfilling</h5>
+          <pre>Surveying Crew — 1 Surveyor + 1 Surveyor Helper
+   Daily Production  = 1,000 M3/day
+   Crew Hours / Day  = 2 × 8 = 16 MH/day
+   Crew Hours / Unit = 16 / 1000 = 0.016 MH/M3
+
+General Workers Crew — 6 Labour
+   Daily Production  = 500 M3/day
+   Crew Hours / Day  = 6 × 8 = 48 MH/day
+   Crew Hours / Unit = 48 / 500 = 0.096 MH/M3</pre>
+        </div>
+        <div class="principle-block">
+          <h5>Benefit — what it enables</h5>
+          <pre>Duration        = Quantity / Daily Production
+Labor Cost/Unit = Crew Hours/Unit × Crew Hourly Rate</pre>
+        </div>
+      </div>
+    </article>
+
+    <article class="activity">
+      <div class="act-head">
+        <span class="act-code">16</span>
+        <span class="act-name">Machinary PR — fleet requirement</span>
+        <div class="act-tags"><span class="tag eq">EH / Unit</span></div>
+      </div>
+      <div class="act-body-single">
+        <div class="principle-block">
+          <h5>Worked example — 02300-09 Backfilling requires</h5>
+          <pre>Loader            × 2
+Dumptruck         × 3
+Water Tanker      × 2
+Roller Compactor  × 2
+Grader            × 1
+──────────────────────
+Total             = 10 machines
+× 8 hours         = 80 Equipment Hours / day
+
+Daily production  = 500 M3/day
+80 / 500          = 0.16 total equipment-hours / M3</pre>
+        </div>
+        <div class="principle-block">
+          <h5>Benefit</h5>
+          <p>Gives an engineering basis for fleet planning, resource loading, tender cost, equipment demand, and duration.</p>
+        </div>
+      </div>
+    </article>
+
+    <article class="activity">
+      <div class="act-head">
+        <span class="act-code">17</span>
+        <span class="act-name">Machinary PR2 — split by machine type</span>
+        <div class="act-tags"><span class="tag eq">Per-machine EH/M3</span></div>
+      </div>
+      <div class="act-body-single">
+        <div class="principle-block">
+          <h5>Same actual activity — 500 M3/day daily production</h5>
+          <pre>Loader       2 × 8 / 500 = 0.032 EH/M3
+Dumptruck    3 × 8 / 500 = 0.048 EH/M3
+Water Tanker 2 × 8 / 500 = 0.032 EH/M3
+Roller       2 × 8 / 500 = 0.032 EH/M3
+Grader       1 × 8 / 500 = 0.016 EH/M3
+─────────────────────────────────────────
+TOTAL                     = 0.160 EH/M3</pre>
+        </div>
+        <div class="principle-block">
+          <h5>Reconciliation</h5>
+          <p>Perfect reconciliation with Machinary PR (0.160 EH/M3).</p>
+        </div>
+        <div class="principle-block">
+          <h5>Benefit</h5>
+          <pre>Loader EH/M3 × Loader rate
++ Dumptruck EH/M3 × Dumptruck rate
++ …
+= Equipment Cost / M3</pre>
+        </div>
+      </div>
+    </article>
+
+    <article class="activity">
+      <div class="act-head">
+        <span class="act-code">20</span>
+        <span class="act-name">Productivity output — combined table</span>
+        <div class="act-tags"><span class="tag crew">Final numbers</span></div>
+      </div>
+      <div class="act-body-single">
+        <div class="principle-block">
+          <h5>Manpower</h5>
+          <pre>Surveying Crew         0.016 MH/M3
+General Workers Crew   0.096 MH/M3</pre>
+        </div>
+        <div class="principle-block">
+          <h5>Equipment</h5>
+          <pre>Loader            0.032 EH/M3
+Dumptruck         0.048 EH/M3
+Water Tanker      0.032 EH/M3
+Roller Compactor  0.032 EH/M3
+Grader            0.016 EH/M3
+──────────────────────────────
+TOTAL             0.160 EH/M3</pre>
+        </div>
+      </div>
+    </article>
+  </div>
+
+  <!-- ─── ARCHITECTURE ─── -->
+  <div id="sub-architecture" class="subpage">
+
+    <article class="activity">
+      <div class="act-head">
+        <span class="act-code">18</span>
+        <span class="act-name">How ALL lists link together</span>
+        <div class="act-tags"><span class="tag gold">Full diagram</span></div>
+      </div>
+      <div class="act-body-single">
+        <div class="principle-block">
+          <h5>Real workbook architecture</h5>
+          <pre>                           ┌─────────────────────┐
+                           │  ACTIVITY LIST CSI  │
+                           │    WHAT WE DO       │
+                           └──────────┬──────────┘
+                                      │
+                 ┌────────────────────┼────────────────────┐
+                 ▼                    ▼                    ▼
+        MAT. LIST CSI          MP. LIST CSI        SUBC. LIST CSI
+        Activity↔Material      Activity↔Crew       Activity↔Sub
+                 │                    │                    │
+                 ▼                    ▼                    ▼
+       MATERIAL UNIQUE       MANPOWER UNIQUE       SUBC UNIQUE
+                 │                    │                    │
+                 │            MANPOWER LIST               │
+                 │                    ▲                    │
+                 │       MANUAL MANPOWER DATABASE         │
+                 └─────────────────┐   ┌───────────────────┘
+                                   ▼   ▼
+                              RESOURCE UNIQUE
+                                   ▲
+                           MACHINE LIST
+                                   ▲
+                       LIST OF UNIQUE MACHINARY
+                                   ▲
+                            EQUIP. LIST CSI
+                                   ▲
+                              ACTIVITY</pre>
+        </div>
+        <div class="principle-block">
+          <h5>PRODUCTIVITY LAYER</h5>
+          <pre>Activity
+   │
+   ├──── Manpower PR ──────► MH / Unit
+   │
+   └──── Machinary PR ─────► Machine quantities
+                                     │
+                                     ▼
+                              Machinary PR2
+                                     │
+                                     ▼
+                                 EH / Unit</pre>
+        </div>
+      </div>
+    </article>
+
+    <article class="activity">
+      <div class="act-head">
+        <span class="act-code">23</span>
+        <span class="act-name">Benefit of each list type</span>
+        <div class="act-tags"><span class="tag gold">Matrix</span></div>
+      </div>
+      <div class="act-body-single">
+        <div class="matrix-wrap">
+          <table class="matrix">
+            <thead><tr><th>List Type</th><th>Main Benefit</th></tr></thead>
+            <tbody>
+              <tr><td>Activity List</td><td>One controlled definition of work</td></tr>
+              <tr><td>Material Link</td><td>Knows what material every activity needs</td></tr>
+              <tr><td>Material Unique</td><td>Prevents duplicate materials</td></tr>
+              <tr><td>MP Link</td><td>Knows what crew executes each activity</td></tr>
+              <tr><td>ManPower Unique</td><td>Standard crew composition and rate</td></tr>
+              <tr><td>Individual Manpower</td><td>Standard worker coding and cost</td></tr>
+              <tr><td>Subcontractor Link</td><td>Knows which work may require subcontractors</td></tr>
+              <tr><td>Subcontractor Unique</td><td>One subcontract category identity</td></tr>
+              <tr><td>Equipment Link</td><td>Knows which machines each activity requires</td></tr>
+              <tr><td>Unique Machinery</td><td>Engineering-based equipment costing</td></tr>
+              <tr><td>Machine List</td><td>Practical equipment variants and hourly rates</td></tr>
+              <tr><td>Resource Unique</td><td>One corporate resource catalogue</td></tr>
+              <tr><td>Manpower PR</td><td>Labor requirement / productivity per unit</td></tr>
+              <tr><td>Machinery PR</td><td>Fleet requirement / productivity</td></tr>
+              <tr><td>Machinery PR2</td><td>Individual equipment consumption per unit</td></tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
+    </article>
+
+    <article class="activity">
+      <div class="act-head">
+        <span class="act-code">24</span>
+        <span class="act-name">Overall benefit to SAMCO</span>
+        <div class="act-tags"><span class="tag gold">Lifecycle</span></div>
+      </div>
+      <div class="act-body-single">
+        <div class="result-callout">
+          <h5>Corporate knowledge lifecycle</h5>
+          <div class="formula-line">
+            CORPORATE KNOWLEDGE<br>
+            ↓ ACTIVITY<br>
+            ↓ RESOURCES<br>
+            ↓ PRODUCTIVITY<br>
+            ↓ UNIT COST<br>
+            ↓ TENDER<br>
+            ↓ BOQ<br>
+            ↓ PLANNING<br>
+            ↓ PROCUREMENT<br>
+            ↓ EXECUTION<br>
+            ↓ COST CONTROL<br>
+            ↓ ACTUAL PERFORMANCE<br>
+            ↓ <b>NEW CORPORATE BENCHMARK</b>
+          </div>
+        </div>
+        <div class="matrix-wrap">
+          <table class="matrix">
+            <thead><tr><th>Function</th><th>What changes</th></tr></thead>
+            <tbody>
+              <tr><td>Tender</td><td>Select activity → resources, productivity, rates already known → unit rate generated</td></tr>
+              <tr><td>Planning</td><td>Quantity ÷ Productivity = Duration</td></tr>
+              <tr><td>Procurement</td><td>Schedule + Resource requirements = Procurement demand forecast</td></tr>
+              <tr><td>Cost Control</td><td>Planned resource consumption vs Actual consumption</td></tr>
+              <tr><td>Execution</td><td>Site knows: what crew, what equipment, what production, what material</td></tr>
+              <tr><td>Management</td><td>Sees: Tender assumption vs Plan vs Actual</td></tr>
+              <tr><td>Future projects</td><td>Actual cost, productivity, crew, equipment, duration, material consumption improve the next tender</td></tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
+    </article>
+  </div>
+
+  <!-- ─── WORKED EXAMPLE ─── -->
+  <div id="sub-example" class="subpage">
+
+    <article class="activity">
+      <div class="act-head">
+        <span class="act-code">19</span>
+        <span class="act-name">Complete real example — Activity 02300-09</span>
+        <div class="act-tags"><span class="tag crew">Walkthrough</span></div>
+      </div>
+      <div class="act-body-single">
+        <div class="principle-block">
+          <h5>Step 1 — Activity identity</h5>
+          <pre>Division       02
+Sub Division   02300
+Extension      09
+Activity Code  02300-09
+Description    Backfilling Work For Open Area
+               with Imported Material Including Compaction</pre>
+        </div>
+        <div class="principle-block">
+          <h5>Step 2 — Material</h5>
+          <pre>02300105  Backfilling Material   M3</pre>
+        </div>
+        <div class="principle-block">
+          <h5>Step 3 — Crews</h5>
+          <pre>02700305  Surveying Crew
+             Generated under activity: 02300305
+             Modified to existing    : 02700305
+
+02300320  General Workers Crew</pre>
+        </div>
+        <div class="principle-block">
+          <h5>Step 4 — Subcontractor</h5>
+          <pre>02300210  Backfilling Sub-Contractor</pre>
+        </div>
+        <div class="principle-block">
+          <h5>Step 5 — Equipment</h5>
+          <pre>02300415  Loader
+02300420  Dumptruck
+02300425  Water Tanker
+02300430  Roller Compactor
+02700435  Grader
+             Generated under activity: 02300435
+             Modified to canonical    : 02700435</pre>
+        </div>
+      </div>
+    </article>
+
+    <article class="activity">
+      <div class="act-head">
+        <span class="act-code">21</span>
+        <span class="act-name">Final corporate activity record</span>
+        <div class="act-tags"><span class="tag gold">Standard</span></div>
+      </div>
+      <div class="act-body-single">
+        <div class="principle-block">
+          <h5>========================================</h5>
+          <pre>ACTIVITY STANDARD
+========================================
+
+Activity Code : 02300-09
+Description   : Backfilling Work For Open Area
+                with Imported Material Including Compaction
+UOM           : M3
+
+
+MATERIAL
+────────────────────────────────────────
+02300105   Backfilling Material
+
+
+CREWS
+────────────────────────────────────────
+02700305   Surveying Crew              0.016 MH/M3
+02300320   General Workers Crew        0.096 MH/M3
+
+
+SUBCONTRACTOR
+────────────────────────────────────────
+02300210   Backfilling Sub-Contractor
+
+
+EQUIPMENT
+────────────────────────────────────────
+02300415   Loader            0.032 EH/M3
+02300420   Dumptruck         0.048 EH/M3
+02300425   Water Tanker      0.032 EH/M3
+02300430   Roller Compactor  0.032 EH/M3
+02700435   Grader            0.016 EH/M3
+
+
+PRODUCTION BASIS
+────────────────────────────────────────
+500 M3/day  for the defined equipment fleet
+
+
+COST BASIS
+────────────────────────────────────────
+Material Cost
++ Crew MH/Unit × Crew Rate
++ Equipment EH/Unit × Equipment Rate
++ Subcontract Cost
+= DIRECT UNIT COST / M3</pre>
+        </div>
+      </div>
+    </article>
+
+    <article class="activity">
+      <div class="act-head">
+        <span class="act-code">22</span>
+        <span class="act-name">What happens when you add BOQ quantity</span>
+        <div class="act-tags"><span class="tag crew">BOQ → Everything</span></div>
+      </div>
+      <div class="act-body-single">
+        <div class="principle-block">
+          <h5>Assume tender BOQ says 20,000 M3</h5>
+          <pre>Duration
+   Using 500 M3/day
+   20,000 / 500 = 40 working days
+
+Surveying manpower
+   20,000 × 0.016 = 320 MH
+
+General workers
+   20,000 × 0.096 = 1,920 MH
+
+Loader requirement
+   20,000 × 0.032 = 640 EH
+
+Dumptruck
+   20,000 × 0.048 = 960 EH</pre>
+        </div>
+        <div class="result-callout">
+          <h5>One BOQ quantity automatically becomes</h5>
+          <div class="formula-line">
+            Quantity<br>
+            ↓ Duration<br>
+            ↓ Manpower Requirement<br>
+            ↓ Equipment Requirement<br>
+            ↓ Material Requirement<br>
+            ↓ Tender Cost<br>
+            ↓ Procurement Need<br>
+            ↓ Planning Requirement
+          </div>
+        </div>
+      </div>
+    </article>
+  </div>
+
+</section>
+
+<!-- ═══════════════════════════════════════════════════════════════ -->
+<!-- DIVISION 02 — EARTHWORK                                         -->
+<!-- ═══════════════════════════════════════════════════════════════ -->
+<section id="div02" class="page">
+  <div class="div-header">
+    <div class="left">
+      <div class="div-num">02</div>
+      <div>
+        <div class="div-title">Earthwork</div>
+        <div class="div-sub">Sub Division 02300 · Excavation · Rock Breaking · Backfilling</div>
+      </div>
+    </div>
+    <div class="stats">
+      <div class="stat mat"><b>1</b><span>Material</span></div>
+      <div class="stat sub"><b>2</b><span>Subs</span></div>
+      <div class="stat crew"><b>2</b><span>Crews</span></div>
+      <div class="stat eq"><b>7</b><span>Equip</span></div>
+    </div>
+  </div>
+
+  <article class="activity" data-search="02300-01 excavation sandy soil surveying crew 02700305 02300205 excavator 02300405">
+    <div class="act-head">
+      <span class="act-code">02300-01</span>
+      <span class="act-name">Excavation Work for Sandy Soil</span>
+      <div class="act-tags">
+        <span class="tag crew">1 Crew</span>
+        <span class="tag sub">1 Sub</span>
+        <span class="tag eq">1 Equip</span>
+      </div>
+    </div>
+    <div class="act-body">
+      <div class="res-group g-crew">
+        <h4>Crew / Manpower<span class="count">1</span></h4>
+        <div class="res-item c mod">
+          <div class="res-code">02700305-001</div>
+          <div class="res-name">Surveying Crew</div>
+          <div class="res-meta">02700 | 3 | 05 · UOM: MH</div>
+          <div class="mod-note">Mod · <b>02300305</b> → <b>02700305</b></div>
+        </div>
+      </div>
+      <div class="res-group g-sub">
+        <h4>Subcontractor<span class="count">1</span></h4>
+        <div class="res-item s">
+          <div class="res-code">02300205-001</div>
+          <div class="res-name">Excavation &amp; Disposal Sub-Contractor</div>
+          <div class="res-meta">02300 | 2 | 05 · UOM: LS</div>
+        </div>
+      </div>
+      <div class="res-group g-eq">
+        <h4>Equipment<span class="count">1</span></h4>
+        <div class="res-item e">
+          <div class="res-code">02300405-001</div>
+          <div class="res-name">Excavator</div>
+          <div class="res-meta">02300 | 4 | 05 · UOM: EH</div>
+        </div>
+      </div>
+    </div>
+  </article>
+
+  <article class="activity" data-search="02300-03 excavation rocky soil surveying crew 02300205 excavator rock breaker loader dumptruck 02300405 02300410 02300415 02300420">
+    <div class="act-head">
+      <span class="act-code">02300-03</span>
+      <span class="act-name">Excavation Work for Rocky Soil</span>
+      <div class="act-tags">
+        <span class="tag crew">1 Crew</span>
+        <span class="tag sub">1 Sub</span>
+        <span class="tag eq">4 Equip</span>
+      </div>
+    </div>
+    <div class="act-body">
+      <div class="res-group g-crew">
+        <h4>Crew / Manpower<span class="count">1</span></h4>
+        <div class="res-item c mod">
+          <div class="res-code">02700305-001</div>
+          <div class="res-name">Surveying Crew</div>
+          <div class="res-meta">02700 | 3 | 05 · UOM: MH</div>
+          <div class="mod-note">Mod · <b>02300305</b> → <b>02700305</b></div>
+        </div>
+      </div>
+      <div class="res-group g-sub">
+        <h4>Subcontractor<span class="count">1</span></h4>
+        <div class="res-item s">
+          <div class="res-code">02300205-001</div>
+          <div class="res-name">Excavation &amp; Disposal Sub-Contractor</div>
+          <div class="res-meta">02300 | 2 | 05 · UOM: LS</div>
+        </div>
+      </div>
+      <div class="res-group g-eq">
+        <h4>Equipment<span class="count">4</span></h4>
+        <div class="res-item e"><div class="res-code">02300405-001</div><div class="res-name">Excavator</div><div class="res-meta">02300 | 4 | 05 · EH</div></div>
+        <div class="res-item e"><div class="res-code">02300410-001</div><div class="res-name">Rock Breaker</div><div class="res-meta">02300 | 4 | 10 · EH</div></div>
+        <div class="res-item e"><div class="res-code">02300415-001</div><div class="res-name">Loader</div><div class="res-meta">02300 | 4 | 15 · EH</div></div>
+        <div class="res-item e"><div class="res-code">02300420-001</div><div class="res-name">Dumptruck</div><div class="res-meta">02300 | 4 | 20 · EH</div></div>
+      </div>
+    </div>
+  </article>
+
+  <article class="activity" data-search="02300-09 backfilling open area imported material compaction 02300105 surveying crew general workers crew 02700305 02300320 02300210 loader dumptruck water tanker roller compactor grader 02300415 02300420 02300425 02300430 02700435">
+    <div class="act-head">
+      <span class="act-code">02300-09</span>
+      <span class="act-name">Backfilling for Open Area with Imported Material (incl. Compaction)</span>
+      <div class="act-tags">
+        <span class="tag mat">1 Material</span>
+        <span class="tag crew">2 Crews</span>
+        <span class="tag sub">1 Sub</span>
+        <span class="tag eq">5 Equip</span>
+      </div>
+    </div>
+    <div class="act-body">
+      <div class="res-group g-mat">
+        <h4>Material<span class="count">1</span></h4>
+        <div class="res-item m"><div class="res-code">02300105-001</div><div class="res-name">Backfilling Material</div><div class="res-meta">02300 | 1 | 05 · UOM: M3</div></div>
+      </div>
+      <div class="res-group g-crew">
+        <h4>Crew / Manpower<span class="count">2</span></h4>
+        <div class="res-item c mod">
+          <div class="res-code">02700305-001</div>
+          <div class="res-name">Surveying Crew</div>
+          <div class="res-meta">02700 | 3 | 05 · MH</div>
+          <div class="mod-note">Mod · <b>02300305</b> → <b>02700305</b></div>
+        </div>
+        <div class="res-item c">
+          <div class="res-code">02300320-001</div>
+          <div class="res-name">General Workers Crew</div>
+          <div class="res-meta">02300 | 3 | 20 · MH</div>
+        </div>
+      </div>
+      <div class="res-group g-sub">
+        <h4>Subcontractor<span class="count">1</span></h4>
+        <div class="res-item s"><div class="res-code">02300210-001</div><div class="res-name">Backfilling Sub-Contractor</div><div class="res-meta">02300 | 2 | 10 · LS</div></div>
+      </div>
+      <div class="res-group g-eq">
+        <h4>Equipment<span class="count">5</span></h4>
+        <div class="res-item e"><div class="res-code">02300415-001</div><div class="res-name">Loader</div><div class="res-meta">02300 | 4 | 15 · EH</div></div>
+        <div class="res-item e"><div class="res-code">02300420-001</div><div class="res-name">Dumptruck</div><div class="res-meta">02300 | 4 | 20 · EH</div></div>
+        <div class="res-item e"><div class="res-code">02300425-001</div><div class="res-name">Water Tanker</div><div class="res-meta">02300 | 4 | 25 · EH</div></div>
+        <div class="res-item e"><div class="res-code">02300430-001</div><div class="res-name">Roller Compactor</div><div class="res-meta">02300 | 4 | 30 · EH</div></div>
+        <div class="res-item e mod">
+          <div class="res-code">02700435-001</div>
+          <div class="res-name">Grader</div>
+          <div class="res-meta">02700 | 4 | 35 · EH</div>
+          <div class="mod-note">Mod · <b>02300435</b> → <b>02700435</b></div>
+        </div>
+      </div>
+    </div>
+  </article>
+
+  <div class="empty" id="empty02"><div class="big">⌕</div><div>No activities match your search.</div></div>
+</section>
+
+<!-- ═══════════════════════════════════════════════════════════════ -->
+<!-- DIVISION 04 — BLOCKWORK                                         -->
+<!-- ═══════════════════════════════════════════════════════════════ -->
+<section id="div04" class="page">
+  <div class="div-header">
+    <div class="left">
+      <div class="div-num">04</div>
+      <div>
+        <div class="div-title">Blockwork</div>
+        <div class="div-sub">Sub Division 04200 · Masonry Units</div>
+      </div>
+    </div>
+    <div class="stats">
+      <div class="stat mat"><b>4</b><span>Materials</span></div>
+      <div class="stat sub"><b>1</b><span>Sub</span></div>
+      <div class="stat crew"><b>1</b><span>Crew</span></div>
+      <div class="stat eq"><b>0</b><span>Equip</span></div>
+    </div>
+  </div>
+
+  <article class="activity" data-search="04200-01 block work solid blocks block accessories sand cement 04200115 04200125 04200110 09200105 04200305 block work crew 04200205">
+    <div class="act-head">
+      <span class="act-code">04200-01</span>
+      <span class="act-name">Block Work</span>
+      <div class="act-tags">
+        <span class="tag mat">4 Materials</span>
+        <span class="tag crew">1 Crew</span>
+        <span class="tag sub">1 Sub</span>
+        <span class="tag none">No Equip</span>
+      </div>
+    </div>
+    <div class="act-body">
+      <div class="res-group g-mat">
+        <h4>Material<span class="count">4</span></h4>
+        <div class="res-item m"><div class="res-code">04200115-001</div><div class="res-name">Solid Blocks</div><div class="res-meta">04200 | 1 | 15</div></div>
+        <div class="res-item m"><div class="res-code">04200125-001</div><div class="res-name">Block Accessories</div><div class="res-meta">04200 | 1 | 25</div></div>
+        <div class="res-item m"><div class="res-code">04200110-001</div><div class="res-name">Sand</div><div class="res-meta">04200 | 1 | 10</div></div>
+        <div class="res-item m mod">
+          <div class="res-code">09200105-001</div>
+          <div class="res-name">Cement</div>
+          <div class="res-meta">09200 | 1 | 05</div>
+          <div class="mod-note">Mod · <b>04200105</b> → <b>09200105</b></div>
+        </div>
+      </div>
+      <div class="res-group g-crew">
+        <h4>Crew / Manpower<span class="count">1</span></h4>
+        <div class="res-item c">
+          <div class="res-code">04200305-001</div>
+          <div class="res-name">Block Work Crew</div>
+          <div class="res-meta">04200 | 3 | 05 · UOM: MH</div>
+          <div class="crew-comp">
+            <div class="crew-comp-title">Crew Composition</div>
+            <ul>
+              <li><span>04200005 Foreman Mason</span><span>×1</span></li>
+              <li><span>04200020 Mason</span><span>×6</span></li>
+              <li><span>04200010 Helper Mason</span><span>×6</span></li>
+              <li><span>01700039 Labour</span><span>×9</span></li>
+            </ul>
+          </div>
+        </div>
+      </div>
+      <div class="res-group g-sub">
+        <h4>Subcontractor<span class="count">1</span></h4>
+        <div class="res-item s">
+          <div class="res-code">04200205-001</div>
+          <div class="res-name">Block Work Sub-Contractor</div>
+          <div class="res-meta">04200 | 2 | 05 · UOM: LS</div>
+        </div>
+      </div>
+      <div class="res-group g-eq">
+        <h4>Equipment<span class="count">0</span></h4>
+        <div class="res-empty">No equipment link exists.</div>
+      </div>
+    </div>
+  </article>
+
+  <div class="empty" id="empty04"><div class="big">⌕</div><div>No activities match your search.</div></div>
+</section>
+
+<!-- ═══════════════════════════════════════════════════════════════ -->
+<!-- DIVISION 15 & 16 — MEP                                          -->
+<!-- ═══════════════════════════════════════════════════════════════ -->
+<section id="div15" class="page">
+  <div class="div-header">
+    <div class="left">
+      <div class="div-num">15·16</div>
+      <div>
+        <div class="div-title">Mechanical &amp; Electrical</div>
+        <div class="div-sub">HVAC · Building Service Piping · Process Piping · Basic Electrical</div>
+      </div>
+    </div>
+    <div class="stats">
+      <div class="stat mat"><b>11</b><span>Materials</span></div>
+      <div class="stat sub"><b>4</b><span>Subs</span></div>
+      <div class="stat crew"><b>4</b><span>Crews</span></div>
+      <div class="stat eq"><b>2</b><span>Equip</span></div>
+    </div>
+  </div>
+
+  <div class="subtabs">
+    <button class="subtab active" data-subtab="mech">15 · Mechanical</button>
+    <button class="subtab" data-subtab="elec">16 · Electrical</button>
+  </div>
+
+  <div id="sub-mech" class="subpage active">
+
+    <article class="activity" data-search="15700-01 hvac work hvac sub-contractor 15700205">
+      <div class="act-head">
+        <span class="act-code">15700-01</span>
+        <span class="act-name">HVAC Work</span>
+        <div class="act-tags"><span class="tag sub">1 Sub</span><span class="tag none">No Mat / Crew / Equip</span></div>
+      </div>
+      <div class="act-body">
+        <div class="res-group g-sub"><h4>Subcontractor<span class="count">1</span></h4><div class="res-item s"><div class="res-code">15700205-001</div><div class="res-name">HVAC Sub-Contractor</div><div class="res-meta">15700 | 2 | 05 · UOM: LS</div></div></div>
+        <div class="res-group g-mat"><h4>Material<span class="count">0</span></h4><div class="res-empty">No material link exists in Mat. List CSI</div></div>
+        <div class="res-group g-crew"><h4>Crew / Manpower<span class="count">0</span></h4><div class="res-empty">No manpower link exists in MP. List CSI</div></div>
+        <div class="res-group g-eq"><h4>Equipment<span class="count">0</span></h4><div class="res-empty">No equipment link exists in Equip. List CSI</div></div>
+      </div>
+    </article>
+
+    <article class="activity" data-search="15100-01 building plumbing ppr pipes 15100105 building plumbing crew 15100305 building plumbing sub-contractor 15100225">
+      <div class="act-head">
+        <span class="act-code">15100-01</span>
+        <span class="act-name">Building Plumbing — PPR Pipes</span>
+        <div class="act-tags"><span class="tag mat">1 Material</span><span class="tag crew">1 Crew</span><span class="tag sub">1 Sub</span></div>
+      </div>
+      <div class="act-body">
+        <div class="res-group g-mat"><h4>Material<span class="count">1</span></h4><div class="res-item m"><div class="res-code">15100105-001</div><div class="res-name">PPR Pipes</div><div class="res-meta">15100 | 1 | 05 · UOM: L.M</div></div></div>
+        <div class="res-group g-crew">
+          <h4>Crew / Manpower<span class="count">1</span></h4>
+          <div class="res-item c">
+            <div class="res-code">15100305-001</div>
+            <div class="res-name">Building Plumbing Crew</div>
+            <div class="res-meta">15100 | 3 | 05 · UOM: MH</div>
+            <div class="crew-comp">
+              <div class="crew-comp-title">Crew Composition</div>
+              <ul>
+                <li><span>15100005 Foreman Plumbing</span><span>×1</span></li>
+                <li><span>15100015 Plumber</span><span>×3</span></li>
+                <li><span>01700039 Labour</span><span>×6</span></li>
+              </ul>
+            </div>
+          </div>
+        </div>
+        <div class="res-group g-sub"><h4>Subcontractor<span class="count">1</span></h4><div class="res-item s"><div class="res-code">15100225-001</div><div class="res-name">Building Plumbing Sub-Contractor</div><div class="res-meta">15100 | 2 | 25 · UOM: LS</div></div></div>
+      </div>
+    </article>
+
+    <article class="activity" data-search="15100-02 building plumbing upvc 15100130 building plumbing crew 15100305 building plumbing sub-contractor 15100225">
+      <div class="act-head">
+        <span class="act-code">15100-02</span>
+        <span class="act-name">Building Plumbing — UPVC</span>
+        <div class="act-tags"><span class="tag mat">1 Material</span><span class="tag crew">1 Crew</span><span class="tag sub">1 Sub</span></div>
+      </div>
+      <div class="act-body">
+        <div class="res-group g-mat"><h4>Material<span class="count">1</span></h4><div class="res-item m"><div class="res-code">15100130-001</div><div class="res-name">UPVC Pipes</div><div class="res-meta">15100 | 1 | 30 · UOM: L.M</div></div></div>
+        <div class="res-group g-crew"><h4>Crew / Manpower<span class="count">1</span></h4><div class="res-item c"><div class="res-code">15100305-001</div><div class="res-name">Building Plumbing Crew (reused)</div><div class="res-meta">15100 | 3 | 05 · MH</div></div></div>
+        <div class="res-group g-sub"><h4>Subcontractor<span class="count">1</span></h4><div class="res-item s"><div class="res-code">15100225-001</div><div class="res-name">Building Plumbing Sub-Contractor (reused)</div><div class="res-meta">15100 | 2 | 25 · LS</div></div></div>
+      </div>
+    </article>
+
+    <article class="activity" data-search="15100-03 building plumbing fixtures equipment toilet bath laundry 15100110 building plumbing crew 15100305 building plumbing sub 15100225">
+      <div class="act-head">
+        <span class="act-code">15100-03</span>
+        <span class="act-name">Building Plumbing — Fixtures &amp; Equipment</span>
+        <div class="act-tags"><span class="tag mat">1 Material</span><span class="tag crew">1 Crew</span><span class="tag sub">1 Sub</span></div>
+      </div>
+      <div class="act-body">
+        <div class="res-group g-mat"><h4>Material<span class="count">1</span></h4><div class="res-item m"><div class="res-code">15100110-001</div><div class="res-name">Toilet, Bath &amp; Laundry Specialties</div><div class="res-meta">15100 | 1 | 10 · UOM: EA</div></div></div>
+        <div class="res-group g-crew"><h4>Crew / Manpower<span class="count">1</span></h4><div class="res-item c"><div class="res-code">15100305-001</div><div class="res-name">Building Plumbing Crew (reused)</div><div class="res-meta">15100 | 3 | 05 · MH</div></div></div>
+        <div class="res-group g-sub"><h4>Subcontractor<span class="count">1</span></h4><div class="res-item s"><div class="res-code">15100225-001</div><div class="res-name">Building Plumbing Sub-Contractor (reused)</div><div class="res-meta">15100 | 2 | 25 · LS</div></div></div>
+      </div>
+    </article>
+
+    <article class="activity" data-search="15200-01 sewage water supply vertified clay pipes 15200115 sewage crew pipes 15200305 sewage work sub 15200220 crane 03400405">
+      <div class="act-head">
+        <span class="act-code">15200-01</span>
+        <span class="act-name">Sewage &amp; Water Supply — Vertified Clay Pipes</span>
+        <div class="act-tags"><span class="tag mat">1 Material</span><span class="tag crew">1 Crew</span><span class="tag sub">1 Sub</span><span class="tag eq">1 Equip</span></div>
+      </div>
+      <div class="act-body">
+        <div class="res-group g-mat"><h4>Material<span class="count">1</span></h4><div class="res-item m"><div class="res-code">15200115-001</div><div class="res-name">Vertified Clay Pipes</div><div class="res-meta">15200 | 1 | 15 · L.M</div></div></div>
+        <div class="res-group g-crew">
+          <h4>Crew / Manpower<span class="count">1</span></h4>
+          <div class="res-item c">
+            <div class="res-code">15200305-001</div>
+            <div class="res-name">Sewage Crew (Pipes)</div>
+            <div class="res-meta">15200 | 3 | 05 · MH</div>
+            <div class="crew-comp">
+              <div class="crew-comp-title">Crew Composition</div>
+              <ul>
+                <li><span>15100015 Plumber</span><span>×1</span></li>
+                <li><span>15100005 Foreman Plumbing</span><span>×8</span></li>
+                <li><span>01700027 Helper</span><span>×4</span></li>
+                <li><span>01700039 Labour</span><span>×4</span></li>
+              </ul>
+            </div>
+          </div>
+        </div>
+        <div class="res-group g-sub"><h4>Subcontractor<span class="count">1</span></h4><div class="res-item s"><div class="res-code">15200220-001</div><div class="res-name">Sewage Work Sub-Contractor</div><div class="res-meta">15200 | 2 | 20 · LS</div></div></div>
+        <div class="res-group g-eq">
+          <h4>Equipment<span class="count">1</span></h4>
+          <div class="res-item e mod">
+            <div class="res-code">03400405-001 / -002</div>
+            <div class="res-name">Crane</div>
+            <div class="res-meta">03400 | 4 | 05 · EH</div>
+            <div class="variants"><div>-001 Telescope</div><div>-002 Tower</div></div>
+            <div class="mod-note">Mod · <b>15200405</b> → <b>03400405</b></div>
+          </div>
+        </div>
+      </div>
+    </article>
+
+    <article class="activity" data-search="15200-02 sewage water concrete pipes 15200120 sewage crew 15200305 sewage sub 15200220 crane 03400405">
+      <div class="act-head">
+        <span class="act-code">15200-02</span>
+        <span class="act-name">Sewage &amp; Water Supply — Concrete Pipes</span>
+        <div class="act-tags"><span class="tag mat">1 Material</span><span class="tag crew">1 Crew</span><span class="tag sub">1 Sub</span><span class="tag eq">1 Equip</span></div>
+      </div>
+      <div class="act-body">
+        <div class="res-group g-mat"><h4>Material<span class="count">1</span></h4><div class="res-item m"><div class="res-code">15200120-001</div><div class="res-name">Concrete Pipes</div><div class="res-meta">15200 | 1 | 20 · L.M</div></div></div>
+        <div class="res-group g-crew"><h4>Crew / Manpower<span class="count">1</span></h4><div class="res-item c"><div class="res-code">15200305-001</div><div class="res-name">Sewage Crew (Pipes) (reused)</div><div class="res-meta">15200 | 3 | 05 · MH</div></div></div>
+        <div class="res-group g-sub"><h4>Subcontractor<span class="count">1</span></h4><div class="res-item s"><div class="res-code">15200220-001</div><div class="res-name">Sewage Work Sub-Contractor (reused)</div><div class="res-meta">15200 | 2 | 20 · LS</div></div></div>
+        <div class="res-group g-eq"><h4>Equipment<span class="count">1</span></h4><div class="res-item e mod"><div class="res-code">03400405-001 / -002</div><div class="res-name">Crane</div><div class="res-meta">03400 | 4 | 05 · EH</div><div class="variants"><div>-001 Telescope</div><div>-002 Tower</div></div><div class="mod-note">Mod · <b>15200405</b> → <b>03400405</b></div></div></div>
+      </div>
+    </article>
+
+    <article class="activity" data-search="15200-03 sewage water iron pipes 15200125 sewage crew 15200305 sewage sub 15200220 crane 03400405">
+      <div class="act-head">
+        <span class="act-code">15200-03</span>
+        <span class="act-name">Sewage &amp; Water Supply — Iron Pipes</span>
+        <div class="act-tags"><span class="tag mat">1 Material</span><span class="tag crew">1 Crew</span><span class="tag sub">1 Sub</span><span class="tag eq">1 Equip</span></div>
+      </div>
+      <div class="act-body">
+        <div class="res-group g-mat"><h4>Material<span class="count">1</span></h4><div class="res-item m"><div class="res-code">15200125-001</div><div class="res-name">Iron Pipes</div><div class="res-meta">15200 | 1 | 25 · L.M</div></div></div>
+        <div class="res-group g-crew"><h4>Crew / Manpower<span class="count">1</span></h4><div class="res-item c"><div class="res-code">15200305-001</div><div class="res-name">Sewage Crew (Pipes) (reused)</div><div class="res-meta">15200 | 3 | 05 · MH</div></div></div>
+        <div class="res-group g-sub"><h4>Subcontractor<span class="count">1</span></h4><div class="res-item s"><div class="res-code">15200220-001</div><div class="res-name">Sewage Work Sub-Contractor (reused)</div><div class="res-meta">15200 | 2 | 20 · LS</div></div></div>
+        <div class="res-group g-eq"><h4>Equipment<span class="count">1</span></h4><div class="res-item e"><div class="res-code">03400405-001 / -002</div><div class="res-name">Crane</div><div class="res-meta">03400 | 4 | 05 · EH</div><div class="variants"><div>-001 Telescope</div><div>-002 Tower</div></div></div></div>
+      </div>
+    </article>
+
+    <article class="activity" data-search="15200-04 sewage water upvc pipes 15200130 sewage crew 15200305 sewage sub 15200220">
+      <div class="act-head">
+        <span class="act-code">15200-04</span>
+        <span class="act-name">Sewage &amp; Water Supply — UPVC Pipes</span>
+        <div class="act-tags"><span class="tag mat">1 Material</span><span class="tag crew">1 Crew</span><span class="tag sub">1 Sub</span><span class="tag none">No Equip</span></div>
+      </div>
+      <div class="act-body">
+        <div class="res-group g-mat"><h4>Material<span class="count">1</span></h4><div class="res-item m"><div class="res-code">15200130-001</div><div class="res-name">Sewage UPVC Pipes</div><div class="res-meta">15200 | 1 | 30 · L.M</div></div></div>
+        <div class="res-group g-crew"><h4>Crew / Manpower<span class="count">1</span></h4><div class="res-item c"><div class="res-code">15200305-001</div><div class="res-name">Sewage Crew (Pipes) (reused)</div><div class="res-meta">15200 | 3 | 05 · MH</div></div></div>
+        <div class="res-group g-sub"><h4>Subcontractor<span class="count">1</span></h4><div class="res-item s"><div class="res-code">15200220-001</div><div class="res-name">Sewage Work Sub-Contractor (reused)</div><div class="res-meta">15200 | 2 | 20 · LS</div></div></div>
+        <div class="res-group g-eq"><h4>Equipment<span class="count">0</span></h4><div class="res-empty">No equipment link exists.</div></div>
+      </div>
+    </article>
+
+    <article class="activity" data-search="15200-05 sewage water grp pipes 15200135 sewage crew 15200305 sewage sub 15200220 crane 03400405">
+      <div class="act-head">
+        <span class="act-code">15200-05</span>
+        <span class="act-name">Sewage &amp; Water Supply — GRP Pipes</span>
+        <div class="act-tags"><span class="tag mat">1 Material</span><span class="tag crew">1 Crew</span><span class="tag sub">1 Sub</span><span class="tag eq">1 Equip</span></div>
+      </div>
+      <div class="act-body">
+        <div class="res-group g-mat"><h4>Material<span class="count">1</span></h4><div class="res-item m"><div class="res-code">15200135-001</div><div class="res-name">GRP Pipes</div><div class="res-meta">15200 | 1 | 35 · L.M</div></div></div>
+        <div class="res-group g-crew"><h4>Crew / Manpower<span class="count">1</span></h4><div class="res-item c"><div class="res-code">15200305-001</div><div class="res-name">Sewage Crew (Pipes) (reused)</div><div class="res-meta">15200 | 3 | 05 · MH</div></div></div>
+        <div class="res-group g-sub"><h4>Subcontractor<span class="count">1</span></h4><div class="res-item s"><div class="res-code">15200220-001</div><div class="res-name">Sewage Work Sub-Contractor (reused)</div><div class="res-meta">15200 | 2 | 20 · LS</div></div></div>
+        <div class="res-group g-eq"><h4>Equipment<span class="count">1</span></h4><div class="res-item e"><div class="res-code">03400405-001 / -002</div><div class="res-name">Crane</div><div class="res-meta">03400 | 4 | 05 · EH</div><div class="variants"><div>-001 Telescope</div><div>-002 Tower</div></div></div></div>
+      </div>
+    </article>
+
+    <article class="activity" data-search="15200-06 sewage water manhole ready mix plain concrete 03300125 manhole precast 15200140 manhole cover 15200145 sewage manhole 15200310 general workers crew 02300320 sewage sub 15200220 loader 02300415 crane 03400405">
+      <div class="act-head">
+        <span class="act-code">15200-06</span>
+        <span class="act-name">Sewage &amp; Water Supply — Manhole</span>
+        <div class="act-tags"><span class="tag mat">3 Materials</span><span class="tag crew">2 Crews</span><span class="tag sub">1 Sub</span><span class="tag eq">2 Equip</span></div>
+      </div>
+      <div class="act-body">
+        <div class="res-group g-mat">
+          <h4>Material<span class="count">3</span></h4>
+          <div class="res-item m mod">
+            <div class="res-code">03300125-001</div>
+            <div class="res-name">Ready Mix-Plain Concrete</div>
+            <div class="res-meta">03300 | 1 | 25 · M3</div>
+            <div class="mod-note">Mod · <b>15200125</b> → <b>03300125</b></div>
+          </div>
+          <div class="res-item m"><div class="res-code">15200140-001</div><div class="res-name">Manhole Precast Concrete</div><div class="res-meta">15200 | 1 | 40 · EA</div></div>
+          <div class="res-item m"><div class="res-code">15200145-001</div><div class="res-name">Manhole Cover</div><div class="res-meta">15200 | 1 | 45 · EA</div></div>
+        </div>
+        <div class="res-group g-crew">
+          <h4>Crew / Manpower<span class="count">2</span></h4>
+          <div class="res-item c">
+            <div class="res-code">15200310-001</div>
+            <div class="res-name">Sewage (Manhole)</div>
+            <div class="res-meta">15200 | 3 | 10 · MH</div>
+            <div class="crew-comp">
+              <div class="crew-comp-title">Crew Composition</div>
+              <ul>
+                <li><span>03300010 Carpenter Shuttering</span><span>×10</span></li>
+                <li><span>03300020 Foreman Carpenter</span><span>×1</span></li>
+                <li><span>01700039 Labour</span><span>×8</span></li>
+                <li><span>09700015 Plasterer</span><span>×1</span></li>
+                <li><span>03300060 Steel Fixer</span><span>×4</span></li>
+              </ul>
+            </div>
+          </div>
+          <div class="res-item c mod">
+            <div class="res-code">02300320-001</div>
+            <div class="res-name">General Workers Crew</div>
+            <div class="res-meta">02300 | 3 | 20 · MH</div>
+            <div class="crew-comp">
+              <div class="crew-comp-title">Crew Composition</div>
+              <ul>
+                <li><span>01700051 Leadman Labour</span><span>×1</span></li>
+                <li><span>01700027 Helper</span><span>×3</span></li>
+                <li><span>01700039 Labour</span><span>×9</span></li>
+              </ul>
+            </div>
+            <div class="mod-note">Mod · <b>15200320</b> → <b>02300320</b></div>
+          </div>
+        </div>
+        <div class="res-group g-sub"><h4>Subcontractor<span class="count">1</span></h4><div class="res-item s"><div class="res-code">15200220-001</div><div class="res-name">Sewage Work Sub-Contractor (reused)</div><div class="res-meta">15200 | 2 | 20 · LS</div></div></div>
+        <div class="res-group g-eq">
+          <h4>Equipment<span class="count">2</span></h4>
+          <div class="res-item e mod">
+            <div class="res-code">02300415-001 / -002</div>
+            <div class="res-name">Loader</div>
+            <div class="res-meta">02300 | 4 | 15 · EH</div>
+            <div class="variants"><div>-001 Big</div><div>-002 Small</div></div>
+            <div class="mod-note">Mod · <b>15200415</b> → <b>02300415</b></div>
+          </div>
+          <div class="res-item e mod">
+            <div class="res-code">03400405-001 / -002</div>
+            <div class="res-name">Crane</div>
+            <div class="res-meta">03400 | 4 | 05 · EH</div>
+            <div class="variants"><div>-001 Telescope</div><div>-002 Tower</div></div>
+            <div class="mod-note">Mod · <b>15200405</b> → <b>03400405</b></div>
+          </div>
+        </div>
+      </div>
+    </article>
+
+    <div class="empty" id="emptyMech"><div class="big">⌕</div><div>No activities match your search.</div></div>
+  </div>
+
+  <div id="sub-elec" class="subpage">
+    <article class="activity" data-search="16050-01 electrical work electrical sub-contractor 16050205">
+      <div class="act-head">
+        <span class="act-code">16050-01</span>
+        <span class="act-name">Electrical Work</span>
+        <div class="act-tags"><span class="tag sub">1 Sub</span><span class="tag none">No Mat / Crew / Equip</span></div>
+      </div>
+      <div class="act-body">
+        <div class="res-group g-sub"><h4>Subcontractor<span class="count">1</span></h4><div class="res-item s"><div class="res-code">16050205-001</div><div class="res-name">Electrical Sub-Contractor</div><div class="res-meta">16050 | 2 | 05 · UOM: LS</div></div></div>
+        <div class="res-group g-mat"><h4>Material<span class="count">0</span></h4><div class="res-empty">No material link exists in Mat. List CSI</div></div>
+        <div class="res-group g-crew"><h4>Crew / Manpower<span class="count">0</span></h4><div class="res-empty">No manpower link exists in MP. List CSI</div></div>
+        <div class="res-group g-eq"><h4>Equipment<span class="count">0</span></h4><div class="res-empty">No equipment link exists in Equip. List CSI</div></div>
+      </div>
+    </article>
+    <div class="empty" id="emptyElec"><div class="big">⌕</div><div>No activities match your search.</div></div>
+  </div>
+</section>
+
+</main>
+
+<footer class="app-footer">
+  <div>MEP Coding System · Workbook Logic + Divisions 02 · 04 · 15 &amp; 16</div>
+  <div class="formula">Sub Division + Category Digit + Sequence → Mod. if exists → Resource Code → UOM</div>
+</footer>
+
+<script>
+(function(){
+  'use strict';
+
+  /* ── MAIN TABS ── */
+  var mainTabs = document.querySelectorAll('.tab');
+  var pages = document.querySelectorAll('.page');
+  for (var i = 0; i < mainTabs.length; i++) {
+    mainTabs[i].addEventListener('click', function(){
+      for (var j = 0; j < mainTabs.length; j++) mainTabs[j].classList.remove('active');
+      for (var k = 0; k < pages.length; k++) pages[k].classList.remove('active');
+      this.classList.add('active');
+      var target = document.getElementById(this.getAttribute('data-tab'));
+      if (target) target.classList.add('active');
+      window.scrollTo({top:0, behavior:'smooth'});
+      runSearch();
+    });
+  }
+
+  /* ── SUB TABS (scoped per group) ── */
+  var subTabGroups = document.querySelectorAll('.subtabs');
+  for (var g = 0; g < subTabGroups.length; g++) {
+    (function(group){
+      var tabs = group.querySelectorAll('.subtab');
+      var page = group.closest('.page');
+      for (var t = 0; t < tabs.length; t++) {
+        tabs[t].addEventListener('click', function(){
+          for (var a = 0; a < tabs.length; a++) tabs[a].classList.remove('active');
+          var subs = page.querySelectorAll('.subpage');
+          for (var b = 0; b < subs.length; b++) subs[b].classList.remove('active');
+          this.classList.add('active');
+          var target = document.getElementById('sub-' + this.getAttribute('data-subtab'));
+          if (target) target.classList.add('active');
+          runSearch();
+        });
+      }
+    })(subTabGroups[g]);
+  }
+
+  /* ── THEME ── */
+  var themeBtn = document.getElementById('themeToggle');
+  try {
+    if (localStorage.getItem('mep-theme') === 'dark') {
+      document.documentElement.classList.add('dark');
+    }
+  } catch(e){}
+  themeBtn.addEventListener('click', function(){
+    document.documentElement.classList.toggle('dark');
+    try {
+      localStorage.setItem('mep-theme',
+        document.documentElement.classList.contains('dark') ? 'dark' : 'light');
+    } catch(e){}
+  });
+
+  /* ── SEARCH ── */
+  var searchInput = document.getElementById('search');
+
+  function runSearch(){
+    var activePage = document.querySelector('.page.active');
+    if (!activePage) return;
+
+    // Skip search filtering inside the Workbook Logic page
+    if (activePage.id === 'logic') return;
+
+    var q = searchInput.value.trim().toLowerCase();
+
+    var scope = activePage;
+    var activeSub = activePage.querySelector('.subpage.active');
+    if (activeSub) scope = activeSub;
+
+    var cards = scope.querySelectorAll('.activity');
+    var visible = 0;
+    for (var i = 0; i < cards.length; i++) {
+      var card = cards[i];
+      var hay = ((card.getAttribute('data-search') || '') + ' ' + card.textContent).toLowerCase();
+      var ok = !q || hay.indexOf(q) !== -1;
+      card.style.display = ok ? '' : 'none';
+      if (ok) visible++;
+    }
+
+    var emptyId = null;
+    if (activePage.id === 'div02') emptyId = 'empty02';
+    else if (activePage.id === 'div04') emptyId = 'empty04';
+    else if (activePage.id === 'div15') emptyId = (scope.id === 'sub-elec') ? 'emptyElec' : 'emptyMech';
+
+    if (emptyId) {
+      var emptyEl = document.getElementById(emptyId);
+      if (emptyEl) {
+        if (visible === 0) emptyEl.classList.add('show');
+        else emptyEl.classList.remove('show');
+      }
+    }
+  }
+
+  var timer;
+  searchInput.addEventListener('input', function(){
+    clearTimeout(timer);
+    timer = setTimeout(runSearch, 120);
+  });
+
+  /* ── KEYBOARD ── */
+  document.addEventListener('keydown', function(e){
+    if (e.key === '/' && document.activeElement !== searchInput) {
+      e.preventDefault();
+      searchInput.focus();
+    }
+    if (e.key === 'Escape' && document.activeElement === searchInput) {
+      searchInput.value = '';
+      runSearch();
+      searchInput.blur();
+    }
+  });
+
+  runSearch();
+})();
+</script>
+</body>
+</html>
